@@ -1,0 +1,746 @@
+<html>
+<head>
+    <script src="./plotly-latest.min.js"></script>
+    <script src="./math.js"></script>
+    <title>Complex numbers in 3D</title>
+</head>
+<body>
+
+    <div>
+        <table>
+        <tr>
+            <td>
+                <div style="border: 1px solid #ccc; padding-bottom: 1px; margin: 0 30px 0 0;">
+                    <div id="plot3D" class="plot-area" style="width: 600px; height: 600px;"></div>
+                </div>
+            </td>
+            <td>
+                <table class="border">
+                <tr>
+                    <td>
+                        <div id="plot2D-y-complex" class="plot-area" style="width: 300px; height: 300px;"></div>
+                    </td>
+                    <td>
+                        <div id="plot2D-re-re" class="plot-area" style="width: 300px; height: 300px;"></div>
+                    </td>
+                    <td>
+                        <div id="plot2D-im-re" class="plot-area" style="width: 300px; height: 300px;"></div>
+                    </td>
+                </tr>
+                <tr>
+                    <td>
+                        <div id="plot2D-x-complex" class="plot-area" style="width: 300px; height: 300px;"></div>
+                    </td>
+                    <td>
+                        <div id="plot2D-re-im" class="plot-area" style="width: 300px; height: 300px;"></div>
+                    </td>
+                    <td>
+                        <div id="plot2D-im-im" class="plot-area" style="width: 300px; height: 300px;"></div>
+                    </td>
+                </tr>
+                </table>
+            </td>
+        </tr>
+        </table>
+    </div>
+
+
+    <div class="control-bar">
+        <div>
+            <h1><center>Complex numbers in 3D</center></h1>
+            <form>
+            <table>
+            <tr>
+                <td>
+                    <div class="param-line">
+                        <div class="param" style="flex-grow: 3">
+                            <label>Function 1:</label>
+                            <input id="func1" value="return math.complex(0, 1).pow(x_complex)" style="width: 100%"/>
+                        </div>
+                        <div class="param">
+                            <label>Type 1:</label>
+                            <select id="plot_type1"> <option value="scatter3d" selected>scatter</option> <option value="surface">surface</option> <option value="">[none]</option> </select>
+                        </div>
+                    </div>
+
+                    <div class="param-line">
+                        <div class="param"><label>x_re from:</label>   <input id="x1-re-from"  value="-4"/></div>
+                        <div class="param"><label>x_re to:</label>     <input id="x1-re-to"    value="4"/></div>
+                        <div class="param"><label>delta_re:</label>    <input id="x1-delta_re" value="0.1"/></div>
+                        <div class="param"></div>
+                    </div>
+
+                    <div class="param-line">
+                        <div class="param"><label>x_im from:</label>   <input id="x1-im-from"  value="0"/></div>
+                        <div class="param"><label>x_im to:</label>     <input id="x1-im-to"    value="0"/></div>
+                        <div class="param"><label>delta_im:</label>    <input id="x1-delta_im" value="0"/></div>
+                        <div class="param"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div class="param-line">
+                        <div class="param" style="flex-grow: 3">
+                            <label>Function 2:</label>
+                            <input id="func2" value="" style="width: 100%"/>
+                        </div>
+                        <div class="param">
+                            <label>Type 2:</label>
+                            <select id="plot_type2"> <option value="scatter3d">scatter</option> <option value="surface">surface</option> <option value="" selected>[none]</option> </select>
+                        </div>
+                    </div>
+
+                    <div class="param-line">
+                        <div class="param"><label>x_re from:</label>   <input id="x2-re-from"  value="-4"/></div>
+                        <div class="param"><label>x_re to:</label>     <input id="x2-re-to"    value="4"/></div>
+                        <div class="param"><label>delta_re:</label>    <input id="x2-delta_re" value="0.1"/></div>
+                        <div class="param"></div>
+                    </div>
+
+                    <div class="param-line">
+                        <div class="param"><label>x_im from:</label>   <input id="x2-im-from"  value="0"/></div>
+                        <div class="param"><label>x_im to:</label>     <input id="x2-im-to"    value="0"/></div>
+                        <div class="param"><label>delta_im:</label>    <input id="x2-delta_im" value="0"/></div>
+                        <div class="param"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>Bounding box:</div>
+
+                    <div class="param-line">
+                        <div class="param"><label>x_re from:</label>   <input id="b-x-re-from" value="-4"/></div>
+                        <div class="param"><label>x_re to:</label>     <input id="b-x-re-to"   value="4"/></div>
+                        <div class="param"><label>x_im from:</label>   <input id="b-x-im-from" value="-4"/></div>
+                        <div class="param"><label>x_im to:</label>     <input id="b-x-im-to"   value="4"/></div>
+                    </div>
+
+                    <div class="param-line">
+                        <div class="param"><label>y_re from:</label>   <input id="b-y-re-from" value="-4"/></div>
+                        <div class="param"><label>y_re to:</label>     <input id="b-y-re-to"   value="4"/></div>
+                        <div class="param"><label>y_im from:</label>   <input id="b-y-im-from" value="-4"/></div>
+                        <div class="param"><label>y_im to:</label>     <input id="b-y-im-to"   value="4"/></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>Axis mapping:</div>
+
+                    <div class="param-line">
+                        <div class="param"><label>X:</label> <select id="m-x"> <option value="x_re" selected>x_re</option> <option value="x_im">x_im</option> <option value="y_re">y_re</option> <option value="y_im">y_im</option> </select></div>
+                        <div class="param"><label>Y:</label> <select id="m-y"> <option value="x_re">x_re</option> <option value="x_im">x_im</option> <option value="y_re" selected>y_re</option> <option value="y_im">y_im</option> </select></div>
+                        <div class="param"><label>Z:</label> <select id="m-z"> <option value="x_re">x_re</option> <option value="x_im">x_im</option> <option value="y_re">y_re</option> <option value="y_im" selected>y_im</option> </select></div>
+                        <div class="param"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <div>Camera:</div>
+
+                    <div class="param-line">
+                        <div class="param"><label>X:</label> <input id="c-x" value="18"/></div>
+                        <div class="param"><label>Y:</label> <input id="c-y" value="0"/></div>
+                        <div class="param"><label>Z:</label> <input id="c-z" value="0"/></div>
+                        <div class="param"></div>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <td>
+                    <button type="submit" onclick="applyParams(true); return false" style="margin-top: 6px">Apply parameters</button>
+                    <button type="reset" onclick="this.form.reset(); saveParamsToUrl(null); applyParams(false); return false;" style="margin-top: 6px">Reset</button>
+                </td>
+            </tr>
+            </table>
+            </form>
+        </div>
+    </div>
+
+
+<script>
+    (function() {
+        restoreParamsFromUrl();
+        applyParams(false);
+
+        window.onpopstate = function (event) {
+            restoreParamsFromUrl();
+            applyParams(false);
+        }
+    })();
+
+
+    function $(selector)
+    {
+        return document.querySelector(selector);
+    }
+
+    function saveParamsToUrl(params)
+    {
+        window.history.replaceState(null, '',
+            (params == null ? window.location.pathname : '#' + encodeURIComponent(btoa(JSON.stringify(params))))
+        );
+    }
+
+    function restoreParamsFromUrl()
+    {
+        var paramsFromUrl = null;
+        try {
+            var hash = window.location.hash;
+            if (hash) {
+                paramsFromUrl = JSON.parse(atob(decodeURIComponent(hash.substr(1))));
+            }
+        } catch (ex) {
+            console.log(ex);
+            paramsFromUrl = null;
+        }
+
+        if (paramsFromUrl) {
+            setInputValue(paramsFromUrl, 'bounds.x_re.from', '#b-x-re-from');
+            setInputValue(paramsFromUrl, 'bounds.x_re.to',   '#b-x-re-to');
+            setInputValue(paramsFromUrl, 'bounds.x_im.from', '#b-x-im-from');
+            setInputValue(paramsFromUrl, 'bounds.x_im.to',   '#b-x-im-to');
+
+            setInputValue(paramsFromUrl, 'bounds.y_re.from', '#b-y-re-from');
+            setInputValue(paramsFromUrl, 'bounds.y_re.to',   '#b-y-re-to');
+            setInputValue(paramsFromUrl, 'bounds.y_im.from', '#b-y-im-from');
+            setInputValue(paramsFromUrl, 'bounds.y_im.to',   '#b-y-im-to');
+
+            setInputValue(paramsFromUrl, 'x1.re.from',    '#x1-re-from');
+            setInputValue(paramsFromUrl, 'x1.re.to',      '#x1-re-to');
+            setInputValue(paramsFromUrl, 'x1.im.from',    '#x1-im-from');
+            setInputValue(paramsFromUrl, 'x1.im.to',      '#x1-im-to');
+            setInputValue(paramsFromUrl, 'x1.delta_re',   '#x1-delta_re');
+            setInputValue(paramsFromUrl, 'x1.delta_im',   '#x1-delta_im');
+
+            setInputValue(paramsFromUrl, 'x2.re.from',    '#x2-re-from');
+            setInputValue(paramsFromUrl, 'x2.re.to',      '#x2-re-to');
+            setInputValue(paramsFromUrl, 'x2.im.from',    '#x2-im-from');
+            setInputValue(paramsFromUrl, 'x2.im.to',      '#x2-im-to');
+            setInputValue(paramsFromUrl, 'x2.delta_re',   '#x2-delta_re');
+            setInputValue(paramsFromUrl, 'x2.delta_im',   '#x2-delta_im');
+
+            setInputValue(paramsFromUrl, 'func1',       '#func1');
+            setInputValue(paramsFromUrl, 'func2',       '#func2');
+            setInputValue(paramsFromUrl, 'plot_type1',  '#plot_type1');
+            setInputValue(paramsFromUrl, 'plot_type2',  '#plot_type2');
+
+            setInputValue(paramsFromUrl, 'mapping.x',   '#m-x');
+            setInputValue(paramsFromUrl, 'mapping.y',   '#m-y');
+            setInputValue(paramsFromUrl, 'mapping.z',   '#m-z');
+
+            setInputValue(paramsFromUrl, 'camera.x',    '#c-x');
+            setInputValue(paramsFromUrl, 'camera.y',    '#c-y');
+            setInputValue(paramsFromUrl, 'camera.z',    '#c-z');
+        }
+    }
+
+    function setInputValue(params, path, inputId)
+    {
+        var obj = params;
+        var parts = path.split('.');
+        for (i = 0; i < parts.length; i++) {
+            var field = parts[i];
+            if (obj[field] === undefined) return;
+
+            obj = obj[field];
+        }
+        $(inputId).value = obj;
+    }
+
+    function getParams()
+    {
+        var params = {
+            bounds: {
+                x_re: {
+                    'from': Number($('#b-x-re-from').value),
+                    'to':   Number($('#b-x-re-to').value),
+                },
+                x_im: {
+                    'from': Number($('#b-x-im-from').value),
+                    'to':   Number($('#b-x-im-to').value),
+                },
+                y_re: {
+                    'from': Number($('#b-y-re-from').value),
+                    'to':   Number($('#b-y-re-to').value),
+                },
+                y_im: {
+                    'from': Number($('#b-y-im-from').value),
+                    'to':   Number($('#b-y-im-to').value),
+                }
+            },
+
+            x1: {
+                re: {
+                    'from': Number($('#x1-re-from').value),
+                    'to':   Number($('#x1-re-to').value),
+                },
+                im: {
+                    'from': Number($('#x1-im-from').value),
+                    'to':   Number($('#x1-im-to').value),
+                },
+                delta_re: Number($('#x1-delta_re').value),
+                delta_im: Number($('#x1-delta_im').value),
+            },
+
+            x2: {
+                re: {
+                    'from': Number($('#x2-re-from').value),
+                    'to':   Number($('#x2-re-to').value),
+                },
+                im: {
+                    'from': Number($('#x2-im-from').value),
+                    'to':   Number($('#x2-im-to').value),
+                },
+                delta_re: Number($('#x2-delta_re').value),
+                delta_im: Number($('#x2-delta_im').value),
+            },
+
+
+            func1: $('#func1').value,
+            func2: $('#func2').value,
+
+            plot_type1: $('#plot_type1').value,
+            plot_type2: $('#plot_type2').value,
+
+
+            mapping: {
+                x: $('#m-x').value,
+                y: $('#m-y').value,
+                z: $('#m-z').value,
+            },
+
+            camera: {
+                x: Number($('#c-x').value),
+                y: Number($('#c-y').value),
+                z: Number($('#c-z').value),
+            },
+        };
+
+        return params;
+    }
+
+    function applyParams(needSaveParams)
+    {
+        try {
+            var params = getParams();
+
+            if (needSaveParams) {
+                saveParamsToUrl(params);
+            }
+
+            params.func1 = Function('x_complex', params.func1);
+            params.func2 = Function('x_complex', params.func2);
+
+            renderPlots(params);
+
+        } catch (ex) {
+            console.log(ex);
+        }
+    }
+
+    function renderPlots(params)
+    {
+        var data1 = {x_re: [], y_re: [], x_im: [], y_im: []};
+        var data2 = {x_re: [], y_re: [], x_im: [], y_im: []};
+
+        fillData(data1, params.plot_type1, params.func1, params.x1, params.bounds);
+        fillData(data2, params.plot_type2, params.func2, params.x2, params.bounds);
+
+
+        var firstColor = 'rgb(0, 160, 0)', secondColor = 'rgb(0, 0, 160)';
+
+        init3DPlot('plot3D', params);
+
+        if (params.plot_type1 != '') {
+            var data = {x: data1[params.mapping.x], y: data1[params.mapping.y], z: data1[params.mapping.z]};
+            addTraces('plot3D', data, firstColor, 1.7, params.plot_type1, 'YlOrRd');
+        }
+
+        if (params.plot_type2 != '') {
+            var data = {x: data2[params.mapping.x], y: data2[params.mapping.y], z: data2[params.mapping.z]};
+            addTraces('plot3D', data, secondColor, 1.7, params.plot_type2, 'YlOrRd');
+        }
+
+
+        init2DPlot('plot2D-re-re', 'x_re', 'y_re', params);
+        init2DPlot('plot2D-im-re', 'x_im', 'y_re', params);
+        init2DPlot('plot2D-re-im', 'x_re', 'y_im', params);
+        init2DPlot('plot2D-im-im', 'x_im', 'y_im', params);
+
+        init2DPlot('plot2D-x-complex', 'x_re', 'x_im', params);
+        init2DPlot('plot2D-y-complex', 'y_re', 'y_im', params);
+
+        if (params.plot_type1 == 'scatter3d') {
+            addTraces('plot2D-re-re', {x: data1['x_re'], y: data1['y_re']}, firstColor);
+            addTraces('plot2D-im-re', {x: data1['x_im'], y: data1['y_re']}, firstColor);
+            addTraces('plot2D-re-im', {x: data1['x_re'], y: data1['y_im']}, firstColor);
+            addTraces('plot2D-im-im', {x: data1['x_im'], y: data1['y_im']}, firstColor);
+
+            addTraces('plot2D-x-complex', {x: data1['x_re'], y: data1['x_im']}, firstColor);
+            addTraces('plot2D-y-complex', {x: data1['y_re'], y: data1['y_im']}, firstColor);
+        }
+
+        if (params.plot_type2 == 'scatter3d') {
+            addTraces('plot2D-re-re', {x: data2['x_re'], y: data2['y_re']}, secondColor);
+            addTraces('plot2D-im-re', {x: data2['x_im'], y: data2['y_re']}, secondColor);
+            addTraces('plot2D-re-im', {x: data2['x_re'], y: data2['y_im']}, secondColor);
+            addTraces('plot2D-im-im', {x: data2['x_im'], y: data2['y_im']}, secondColor);
+
+            addTraces('plot2D-x-complex', {x: data2['x_re'], y: data2['x_im']}, secondColor);
+            addTraces('plot2D-y-complex', {x: data2['y_re'], y: data2['y_im']}, secondColor);
+        }
+    }
+
+    function fillData(data, type, func, xParams, boundParams)
+    {
+        if (type == '') return;
+
+        var re_from = xParams.re.from;
+        var im_from = xParams.im.from;
+        var re_to = xParams.re.to;
+        var im_to = xParams.im.to;
+        var delta_re = xParams.delta_re;
+        var delta_im = xParams.delta_im;
+        var x_re, x_im;
+
+        if (type == 'scatter3d') {
+            if (delta_re == 0 && delta_im == 0) { delta_re = 0.1; }
+
+            for (
+                x_re = re_from, x_im = im_from;
+                (delta_re == 0 || x_re < re_to + delta_re/2) && (delta_im == 0 || x_im < im_to + delta_im/2);
+                x_re += delta_re, x_im += delta_im
+            ) {
+                var x_complex = math.complex(x_re, x_im);
+                var y_complex = func(x_complex);
+
+                data.x_re.push(math.round(x_complex.re, 12));
+                data.x_im.push(math.round(x_complex.im, 12));
+                data.y_re.push(math.round(y_complex.re, 12));
+                data.y_im.push(math.round(y_complex.im, 12));
+            }
+
+        } else if (type == 'surface') {
+            if (delta_re == 0) { delta_re = 0.1; }
+            if (delta_im == 0) { delta_im = 0.1; }
+
+            for (x_im = im_from;  x_im < im_to + delta_im/2;  x_im += delta_im) {
+                var series = {x_re: [], y_re: [], x_im: [], y_im: []};
+                for (x_re = re_from;  x_re < re_to + delta_re/2;  x_re += delta_re) {
+                    var x_complex = math.complex(x_re, x_im);
+                    var y_complex = func(x_complex);
+
+
+                    if (y_complex.re < boundParams['y_re']['from'] - delta_re*20)
+                        { y_complex.re = boundParams['y_re']['from'] - delta_re*20; }
+                    if (y_complex.re > boundParams['y_re']['to'] + delta_re*20)
+                        { y_complex.re = boundParams['y_re']['to'] + delta_re*20; }
+                    if (y_complex.im < boundParams['y_im']['from'] - delta_im*20)
+                        { y_complex.im = boundParams['y_im']['from'] - delta_im*20; }
+                    if (y_complex.im > boundParams['y_im']['to'] + delta_im*20)
+                        { y_complex.im = boundParams['y_im']['to'] + delta_im*20; }
+
+                    series.x_re.push(x_complex.re);
+                    series.x_im.push(x_complex.im);
+                    series.y_re.push(y_complex.re);
+                    series.y_im.push(y_complex.im);
+                }
+                data.x_re.push(series.x_re);
+                data.x_im.push(series.x_im);
+                data.y_re.push(series.y_re);
+                data.y_im.push(series.y_im);
+            }
+        }
+    }
+
+    function init3DPlot(elementId, params)
+    {
+        var xMapping = params.mapping['x'];
+        var yMapping = params.mapping['y'];
+        var zMapping = params.mapping['z'];
+
+        var layout = {
+            showlegend: false,
+            scene: {
+                camera: {
+                    center: {x: 0, y: 0, z: 0},
+                    up: {x: 0, y: 0, z: 1},
+                    eye: {x: params.camera.x, y: params.camera.y, z: params.camera.z},
+                },
+                aspectmode: "manual",
+                aspectratio: {
+                    x: (params.bounds[xMapping]['to'] - params.bounds[xMapping]['from']),
+                    y: (params.bounds[yMapping]['to'] - params.bounds[yMapping]['from']),
+                    z: (params.bounds[zMapping]['to'] - params.bounds[zMapping]['from']),
+                },
+                xaxis: {
+                    nticks: 9,
+                    range: [params.bounds[xMapping]['from'], params.bounds[xMapping]['to']],
+                    zerolinewidth: 4,
+                    title: 'X:' + xMapping,
+                },
+                yaxis: {
+                    nticks: 9,
+                    range: [params.bounds[yMapping]['from'], params.bounds[yMapping]['to']],
+                    zerolinewidth: 4,
+                    title: 'Y:' + yMapping,
+                },
+                zaxis: {
+                    nticks: 9,
+                    range: [params.bounds[zMapping]['from'], params.bounds[zMapping]['to']],
+                    zerolinewidth: 4,
+                    title: 'Z:' + zMapping,
+                },
+            },
+            margin: {l: 40, r: 40, t: 40, b: 40},
+        };
+
+        Plotly.newPlot(elementId, [], layout);
+    }
+
+    function init2DPlot(elementId, xMapping, yMapping, params)
+    {
+        var layout = {
+            showlegend: false,
+            margin: {l: 40, r: 40, t: 40, b: 40},
+            xaxis: {
+                nticks: 9,
+                range: [params.bounds[xMapping]['from'], params.bounds[xMapping]['to']],
+                zerolinewidth: 2,
+                title: xMapping,
+            },
+            yaxis: {
+                nticks: 9,
+                range: [params.bounds[yMapping]['from'], params.bounds[yMapping]['to']],
+                zerolinewidth: 2,
+                title: yMapping,
+            },
+        };
+        Plotly.newPlot(elementId, [], layout);
+    }
+
+
+    function addTraces(elementId, data, color, size, type, colorscale)
+    {
+        color = color || 'rgb(0, 160, 0)';
+        size = size || 3;
+        type = type || 'scatter';
+
+        var plotData = {
+            x: [], y: [],
+            type: type,
+            mode: 'markers+lines',
+            marker: {
+                color: color,
+                size: size,
+                line: {
+                    width: 0,
+                }
+            },
+            line: {
+                width: 1,
+            },
+        };
+
+        plotData.x = data.x;
+        plotData.y = data.y;
+        if (data.z) {
+            plotData.z = data.z;
+        }
+        if (colorscale) {
+            plotData.colorscale = colorscale;
+        }
+        if (data.x.length == 1) {
+            plotData.mode = 'markers';
+        }
+
+        Plotly.addTraces(elementId, [plotData]);
+    }
+
+    function deleteTraces(elementId, index)
+    {
+        Plotly.deleteTraces(elementId, index)
+    }
+
+    function buildFuncSurface(colorscale)
+    {
+        colorscale = colorscale || 'YlOrRd';
+        var params = getParams();
+        params.x1.im = params.x1.re;
+        params.x1.delta_im = params.x1.delta_re;
+
+        var data = {x_re: [], y_re: [], x_im: [], y_im: []};
+        fillData(data, 'surface', Function('x_complex', params.func1), params.x1, params.bounds);
+
+        var data3D = {x: data[params.mapping.x], y: data[params.mapping.y], z: data[params.mapping.z]};
+        addTraces('plot3D', data3D, 'rgb(0, 140, 0)', 1.7, 'surface', colorscale);
+    }
+
+    function altform(complex)
+    {
+        var p = complex.toPolar();
+        var exp = (2 * p.phi/math.pi);    //  phi / (pi/2)
+
+        var str = ''
+            + math.round(complex.re, 12) + ' + ' + math.round(complex.im, 12) + 'i'
+            + ' = '
+            + math.round(p.r, 12) + ' * i^' + math.round(exp, 12)
+            + ' = '
+            + math.round(p.r, 12) + ' * i^(1/' + math.round(1/exp, 12) + ')';
+
+        return str;
+    }
+</script>
+
+
+<style>
+    body {
+        font-family: "Helvetica Neue",Helvetica,Arial,sans-serif;
+        font-size: 14px;
+        line-height: 1.42857143;
+        color: #333;
+        margin: 0px;
+    }
+
+    table {
+        border-spacing: 0;
+        border-collapse: collapse;
+    }
+
+    td, th {
+        padding: 0;
+    }
+
+    * {
+        box-sizing: border-box;
+    }
+
+    button, input, select, textarea {
+        line-height: inherit;
+        font: inherit;
+        color: inherit;
+        margin: 0;
+    }
+
+    /* -------- */
+
+    body {
+        min-width: 2000px;
+        padding: 10px 300px 10px 10px;
+    }
+
+    label {
+        font-weight: normal;
+        min-width: 16px;
+        margin-bottom: 2px;
+    }
+
+    table td {
+        vertical-align: top;
+        font-size: 14px;
+    }
+
+    input, select {
+        height: 22px;
+    }
+
+    table.border td {
+        border: 1px solid #ccc;
+    }
+
+    .param {
+        display: block;
+        margin: 0 4px 4px 0;
+    }
+
+    .param label {
+        display: block;
+    }
+
+    .param input, .param select {
+        width: 70px;
+    }
+
+    .param-line {
+        display: flex;
+        justify-content: space-around;
+        flex-flow: row nowrap;
+        align-items: stretch;
+    }
+
+    .param-line .param {
+        flex-grow: 1;
+        flex-basis: 0;
+    }
+
+    .plot-area {
+        display: inline-block;
+    }
+
+    .control-bar {
+        float: right;
+        position: fixed;
+        z-index: 3000;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        border: 1px solid #ccc;
+        background: #fff;
+        padding: 10px 14px;
+        overflow-y: auto;
+        overflow-x: hidden;
+    }
+
+    .control-bar table td {
+        padding: 4px;
+    }
+
+    .control-bar h1 {
+        font-size: inherit;
+        font-weight: normal;
+        margin: 0 4px 4px 4px;
+    }
+
+    .control-bar form {
+        margin-bottom: 0;
+    }
+
+    .license {
+        display: none;
+    }
+</style>
+
+
+<div class="license">
+<!--
+Code released under the MIT license.
+
+Copyright (c) 2017 Michael Vostrikov
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+</div>
+
+
+</body>
+</html>
